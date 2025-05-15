@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Perkembangan Teori Atom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .scientist-card {
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: #e8f4fc;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .scientist-card:hover {
+            transform: translateY(-5px);
+        }
+        .scientist-card h3 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+        .atom-image {
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+            display: block;
+            border-radius: 50%;
+            background-color: #ddd;
+            position: relative;
+        }
+        .dalton-atom {
+            background-color: #e74c3c;
+        }
+        .thomson-atom {
+            background-color: #f39c12;
+            position: relative;
+        }
+        .thomson-atom::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 50%;
+            top: 30px;
+            left: 40px;
+        }
+        .thomson-atom::before {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 50%;
+            bottom: 20px;
+            right: 30px;
+        }
+        .rutherford-atom {
+            background-color: #3498db;
+            border: 2px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .rutherford-atom::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+        }
+        .bohr-atom {
+            background-color: #3498db;
+            border: 2px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .bohr-orbit {
+            position: absolute;
+            border: 1px solid #2c3e50;
+            border-radius: 50%;
+        }
+        .orbit-1 {
+            width: 40px;
+            height: 40px;
+        }
+        .orbit-2 {
+            width: 70px;
+            height: 70px;
+        }
+        .orbit-3 {
+            width: 90px;
+            height: 90px;
+        }
+        .bohr-nucleus {
+            width: 20px;
+            height: 20px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            position: relative;
+        }
+        .bohr-electron {
+            width: 8px;
+            height: 8px;
+            background-color: #2c3e50;
+            border-radius: 50%;
+            position: absolute;
+        }
+        #electron-1 {
+            top: 16px;
+            left: 46px;
+        }
+        #electron-2 {
+            bottom: 30px;
+            right: 20px;
+        }
+        #electron-3 {
+            top: 5px;
+            right: 25px;
+        }
+        #game-area {
+            margin-top: 20px;
+        }
+        #question-area {
+            background-color: #eef7fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        #options-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .option-btn {
+            padding: 10px;
+            border: 1px solid #3498db;
+            background-color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option-btn:hover {
+            background-color: #e8f4fc;
+        }
+        #result-area {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        #progress {
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+        #score-display {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        #next-btn, #restart-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #next-btn:hover, #restart-btn:hover {
+            background-color: #2980b9;
+        }
+        #restart-btn {
+            display: none;
+        }
+        #game-completed {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #d4edda;
+            border-radius: 8px;
+        }
+        .hidden {
+            display: none;
+        }
+        #start-screen {
+            text-align: center;
+            padding: 20px;
+        }
+        #start-btn {
+            padding: 15px 30px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        #start-btn:hover {
+            background-color: #27ae60;
+        }
+        .instructions {
+            text-align: left;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eksplorasi Perkembangan Teori Atom</h1>
+        
+        <!-- Start Screen -->
+        <div id="start-screen">
+            <h2>Selamat Datang di Game Perkembangan Teori Atom!</h2>
+            <p>Anda akan belajar tentang perkembangan teori atom mulai dari Dalton hingga Bohr melalui game interaktif ini.</p>
+            
+            <div class="instructions">
+                <h3>Petunjuk Permainan:</h3>
+                <ol>
+                    <li>Game terdiri dari 10 pertanyaan tentang perkembangan teori atom</li>
+                    <li>Setiap pertanyaan memiliki 4 pilihan jawaban</li>
+                    <li>Pilih jawaban yang benar untuk mendapatkan poin</li>
+                    <li>Lihat skor akhir Anda untuk mengetahui tingkat pemahaman</li>
+                </ol>
+            </div>
+            
+            <button id="start-btn">Mulai Game</button>
+        </div>
+        
+        <!-- Scientist Overview (Initially Hidden) -->
+        <div id="scientist-overview" class="hidden">
+            <h2>Ilmuwan dan Model Atom Mereka</h2>
+            
+            <div class="scientist-card" id="dalton-card">
+                <h3>John Dalton (1803)</h3>
+                <div class="atom-image dalton-atom"></div>
+                <p>Model atom pertama yang menggambarkan atom sebagai bola pejal yang tidak dapat dibagi lagi.</p>
+                <ul>
+                    <li>Atom adalah partikel terkecil yang tidak dapat dibagi</li>
+                    <li>Atom dari unsur yang sama memiliki sifat yang sama</li>
+                    <li>Atom unsur berbeda memiliki sifat berbeda</li>
+                    <li>Senyawa terbentuk dari penggabungan atom-atom</li>
+                </ul>
+            </div>
+            
+            <div class="scientist-card" id="thomson-card">
+                <h3>J.J. Thomson (1897)</h3>
+                <div class="atom-image thomson-atom"></div>
+                <p>Model "Roti Kismis" dengan elektron tersebar dalam massa positif seperti kismis dalam roti.</p>
+                <ul>
+                    <li>Atom memiliki muatan positif yang tersebar merata</li>
+                    <li>Elektron (partikel negatif) tersebar di dalam massa positif</li>
+                    <li>Atom bersifat netral secara keseluruhan</li>
+                </ul>
+            </div>
+            
+            <div class="scientist-card" id="rutherford-card">
+                <h3>Ernest Rutherford (1911)</h3>
+                <div class="atom-image rutherford-atom"></div>
+                <p>Model "Sistem Tata Surya" dengan inti atom di tengah dikelilingi elektron.</p>
+                <ul>
+                    <li>Sebagian besar atom adalah ruang kosong</li>
+                    <li>Di pusat atom terdapat inti yang bermuatan positif</li>
+                    <li>Elektron bergerak mengelilingi inti</li>
+                    <li>Sebagian besar massa atom terpusat di inti</li>
+                </ul>
+            </div>
+            
+            <div class="scientist-card" id="bohr-card">
+                <h3>Niels Bohr (1913)</h3>
+                <div class="atom-image bohr-atom">
+                    <div class="bohr-orbit orbit-1"></div>
+                    <div class="bohr-orbit orbit-2"></div>
+                    <div class="bohr-orbit orbit-3"></div>
+                    <div class="bohr-nucleus"></div>
+                    <div class="bohr-electron" id="electron-1"></div>
+                    <div class="bohr-electron" id="electron-2"></div>
+                    <div class="bohr-electron" id="electron-3"></div>
+                </div>
+                <p>Model Atom dengan elektron bergerak pada lintasan/orbit tertentu dengan tingkat energi spesifik.</p>
+                <ul>
+                    <li>Elektron bergerak pada orbit/lintasan tertentu</li>
+                    <li>Setiap orbit memiliki tingkat energi tertentu</li>
+                    <li>Elektron dapat berpindah dari satu orbit ke orbit lain</li>
+                    <li>Saat elektron berpindah, energi diserap atau dilepaskan</li>
+                </ul>
+            </div>
+            
+            <button id="continue-to-game">Lanjut ke Game</button>
+        </div>
+        
+        <!-- Game Area (Initially Hidden) -->
+        <div id="game-area" class="hidden">
+            <div id="score-display">Skor: 0 / 10</div>
+            
+            <div id="progress-bar">
+                <div id="progress" style="width: 0%">0%</div>
+            </div>
+            
+            <div id="question-area">
+                <h3 id="question-text">Pertanyaan akan muncul di sini</h3>
+            </div>
+            
+            <div id="options-area">
+                <button class="option-btn" id="option0">Pilihan 1</button>
+                <button class="option-btn" id="option1">Pilihan 2</button>
+                <button class="option-btn" id="option2">Pilihan 3</button>
+                <button class="option-btn" id="option3">Pilihan 4</button>
+            </div>
+            
+            <div id="result-area"></div>
+            
+            <button id="next-btn" class="hidden">Pertanyaan Berikutnya</button>
+            <button id="restart-btn">Mulai Lagi</button>
+        </div>
+        
+        <!-- Game Completed Screen (Initially Hidden) -->
+        <div id="game-completed">
+            <h2>Selamat!</h2>
+            <p>Anda telah menyelesaikan game perkembangan teori atom.</p>
+            <h3 id="final-score">Skor Akhir: 0/10</h3>
+            <div id="feedback-text"></div>
+            <button id="restart-game">Main Lagi</button>
+        </div>
+    </div>
+
+    <script>
+        // Questions Database
+        const questions = [
+            {
+                question: "Siapa ilmuwan yang mengusulkan model atom sebagai bola pejal yang tidak dapat dibagi?",
+                options: ["John Dalton", "J.J. Thomson", "Ernest Rutherford", "Niels Bohr"],
+                correct: 0
+            },
+            {
+                question: "Model atom yang dikenal sebagai model 'Roti Kismis' dikemukakan oleh:",
+                options: ["John Dalton", "J.J. Thomson", "Ernest Rutherford", "Niels Bohr"],
+                correct: 1
+            },
+            {
+                question: "Tahun berapa Niels Bohr mengusulkan modelnya tentang atom?",
+                options: ["1803", "1897", "1911", "1913"],
+                correct: 3
+            },
+            {
+                question: "Apa yang ditemukan Rutherford dalam eksperimennya yang mengubah pemahaman tentang struktur atom?",
+                options: ["Elektron", "Proton", "Sebagian besar atom adalah ruang kosong dengan inti di tengah", "Neutron"],
+                correct: 2
+            },
+            {
+                question: "Konsep 'tingkat energi' pada elektron diperkenalkan dalam model atom:",
+                options: ["Dalton", "Thomson", "Rutherford", "Bohr"],
+                correct: 3
+            },
+            {
+                question: "Siapa yang menemukan elektron?",
+                options: ["John Dalton", "J.J. Thomson", "Ernest Rutherford", "Niels Bohr"],
+                correct: 1
+            },
+            {
+                question: "Model atom mana yang pertama kali menjelaskan bahwa atom memiliki inti yang bermuatan positif?",
+                options: ["Model Dalton", "Model Thomson", "Model Rutherford", "Model Bohr"],
+                correct: 2
+            },
+            {
+                question: "Menurut model Dalton, atom dari unsur yang sama memiliki:",
+                options: ["Ukuran yang berbeda", "Sifat kimia yang berbeda", "Massa yang berbeda", "Sifat yang sama"],
+                correct: 3
+            },
+            {
+                question: "Eksperimen apa yang dilakukan Rutherford untuk mengusulkan model atomnya?",
+                options: ["Eksperimen tetes minyak", "Eksperimen hamburan sinar alpha", "Eksperimen sinar katoda", "Eksperimen spektrum cahaya"],
+                correct: 1
+            },
+            {
+                question: "Apa kelemahan utama model atom Rutherford yang diperbaiki oleh Bohr?",
+                options: ["Tidak menjelaskan struktur inti atom", "Tidak menjelaskan mengapa elektron tidak jatuh ke inti", "Tidak menjelaskan adanya neutron", "Tidak menjelaskan ikatan kimia"],
+                correct: 1
+            }
+        ];
+
+        // Game Variables
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        // DOM Elements
+        const startScreen = document.getElementById('start-screen');
+        const scientistOverview = document.getElementById('scientist-overview');
+        const gameArea = document.getElementById('game-area');
+        const gameCompleted = document.getElementById('game-completed');
+        const startBtn = document.getElementById('start-btn');
+        const continueToGameBtn = document.getElementById('continue-to-game');
+        const questionText = document.getElementById('question-text');
+        const optionBtns = [
+            document.getElementById('option0'),
+            document.getElementById('option1'),
+            document.getElementById('option2'),
+            document.getElementById('option3')
+        ];
+        const resultArea = document.getElementById('result-area');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const restartGameBtn = document.getElementById('restart-game');
+        const scoreDisplay = document.getElementById('score-display');
+        const finalScore = document.getElementById('final-score');
+        const feedbackText = document.getElementById('feedback-text');
+        const progressBar = document.getElementById('progress');
+
+        // Start Button Click Event
+        startBtn.addEventListener('click', function() {
+            startScreen.classList.add('hidden');
+            scientistOverview.classList.remove('hidden');
+        });
+
+        // Continue to Game Button Click Event
+        continueToGameBtn.addEventListener('click', function() {
+            scientistOverview.classList.add('hidden');
+            gameArea.classList.remove('hidden');
+            loadQuestion();
+        });
+
+        // Option Buttons Click Events
+        optionBtns.forEach((button, index) => {
+            button.addEventListener('click', function() {
+                if (!answered) {
+                    answered = true;
+                    checkAnswer(index);
+                }
+            });
+        });
+
+        // Next Button Click Event
+        nextBtn.addEventListener('click', function() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showGameCompleted();
+            }
+        });
+
+        // Restart Button Click Events
+        restartBtn.addEventListener('click', resetGame);
+        restartGameBtn.addEventListener('click', resetGame);
+
+        // Load Question Function
+        function loadQuestion() {
+            answered = false;
+            nextBtn.classList.add('hidden');
+            resultArea.innerHTML = "";
+            resultArea.className = "";
+            
+            // Display current question and options
+            questionText.textContent = questions[currentQuestion].question;
+            for (let i = 0; i < 4; i++) {
+                optionBtns[i].textContent = questions[currentQuestion].options[i];
+                optionBtns[i].className = 'option-btn'; // Reset button styling
+            }
+            
+            // Update progress
+            const progress = ((currentQuestion) / questions.length) * 100;
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = Math.round(progress) + '%';
+            
+            // Update score display
+            scoreDisplay.textContent = `Skor: ${score} / ${questions.length}`;
+        }
+
+        // Check Answer Function
+        function checkAnswer(selectedOption) {
+            const correctOption = questions[currentQuestion].correct;
+            
+            if (selectedOption === correctOption) {
+                score++;
+                resultArea.textContent = "Benar! 👍";
+                resultArea.className = "correct";
+                optionBtns[selectedOption].style.backgroundColor = "#d4edda";
+                optionBtns[selectedOption].style.borderColor = "#c3e6cb";
+            } else {
+                resultArea.textContent = "Salah! Jawaban yang benar adalah: " + questions[currentQuestion].options[correctOption];
+                resultArea.className = "incorrect";
+                optionBtns[selectedOption].style.backgroundColor = "#f8d7da";
+                optionBtns[selectedOption].style.borderColor = "#f5c6cb";
+                optionBtns[correctOption].style.backgroundColor = "#d4edda";
+                optionBtns[correctOption].style.borderColor = "#c3e6cb";
+            }
+            
+            scoreDisplay.textContent = `Skor: ${score} / ${questions.length}`;
+            nextBtn.classList.remove('hidden');
+        }
+
+        // Show Game Completed Function
+        function showGameCompleted() {
+            gameArea.classList.add('hidden');
+            gameCompleted.style.display = 'block';
+            finalScore.textContent = `Skor Akhir: ${score}/${questions.length}`;
+            
+            // Provide feedback based on score
+            let feedback = "";
+            const percentage = (score / questions.length) * 100;
+            
+            if (percentage >= 90) {
+                feedback = "Luar biasa! Anda memahami perkembangan teori atom dengan sangat baik!";
+            } else if (percentage >= 70) {
+                feedback = "Bagus! Anda memiliki pemahaman yang baik tentang perkembangan teori atom.";
+            } else if (percentage >= 50) {
+                feedback = "Cukup baik! Anda memahami dasar-dasar perkembangan teori atom, namun masih perlu belajar lebih.";
+            } else {
+                feedback = "Teruslah belajar! Anda perlu memahami lebih dalam tentang perkembangan teori atom.";
+            }
+            
+            feedbackText.textContent = feedback;
+        }
+
+        // Reset Game Function
+        function resetGame() {
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            gameCompleted.style.display = 'none';
+            gameArea.classList.remove('hidden');
+            restartBtn.style.display = 'none';
+            loadQuestion();
+        }
+    </script>
+</body>
+</html>
